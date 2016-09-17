@@ -50,7 +50,10 @@ public class CreditsFrame {
 				+ "This bot utilizes PircBotX (github.com/TheLQ/pircbotx) \n"
 				+ "for its internal workings. Therefore, this \n"
 				+ "program is licensed under the GNU GPL v3 to be \n"
-				+ "compatible with the license for PircBotX.");
+				+ "compatible with the license for PircBotX. \n"
+				+ "\n"
+				+ "The source code for this program can be found at \n"
+				+ "github.com/alexy13423/MHStreamAssistant.");
 		authorText.setBackground(frame.getBackground());
 		authorText.setEditable(false);
 		
