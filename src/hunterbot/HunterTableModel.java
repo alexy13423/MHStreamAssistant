@@ -100,7 +100,7 @@ public class HunterTableModel extends AbstractTableModel {
 		for (int i = 0; i < hunterList.size(); i++) {
 			Hunter hunter = hunterList.get(i);
 			if (hunter.getState() == state){
-				String thisTwitchName = hunterList.get(i).getTwitchName();
+				String thisTwitchName = hunterList.get(i).getTwitchName().toLowerCase();
 				if (thisTwitchName.equals(twitchName))
 					return i;
 			}

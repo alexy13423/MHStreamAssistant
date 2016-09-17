@@ -135,10 +135,10 @@ public class MHStreamAssistant {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				accountName = nameEntry.getText();
+				accountName = nameEntry.getText().toLowerCase();
 				char[] authKeyEntry = passwordEntry.getPassword();
 				authKey = String.copyValueOf(authKeyEntry);
-				targetChannelName = channelName.getText();
+				targetChannelName = channelName.getText().toLowerCase();
 				
 				LoginConfig newConfig = new LoginConfig(accountName, authKey, targetChannelName);
 				try {

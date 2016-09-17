@@ -91,7 +91,7 @@ public class PriorityList extends DefaultListModel<PriorityEntry> implements Ser
 		
 		for (int i = 0; i < this.size(); i++) {
 			PriorityEntry entry = this.get(i);
-			String name = entry.getName();
+			String name = entry.getName().toLowerCase();
 			if (name.equals(twitchName)) {
 				this.remove(i);
 				return entry.getLevel();

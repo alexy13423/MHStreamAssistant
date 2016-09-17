@@ -32,7 +32,7 @@ import hunterbot.Panel.HunterTableFrame;
 
 public class BotMessageQueue implements Runnable{
 	
-	public enum MessageType {
+	public static enum MessageType {
 		QUEUEDIRECTIONS("To sign up, use !hire <hunter name> <HR>. Please only put in a number for HR.", false),
 		QUEUEADD("You've been added to queue!", true),
 		QUEUEALREADYPRESENT("You're already in the queue!", true),
@@ -57,7 +57,6 @@ public class BotMessageQueue implements Runnable{
 		TABLEUNMARKBAIL("You've been unmarked as bailed by the streamer.", true),
 		
 		UPNEXT("", false);
-		
 		
 		private String message;
 		private boolean hasUser;

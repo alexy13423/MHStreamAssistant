@@ -76,7 +76,6 @@ public class HiredHunter implements Serializable {
 		incrementHunt = new JButton("Increment Hunts");
 		incrementHunt.addActionListener(new ActionListener() {
 			
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				incrementHunts();
 			}
@@ -84,7 +83,6 @@ public class HiredHunter implements Serializable {
 		rotateOut = new JButton("Rotate Out");
 		rotateOut.addActionListener(new ActionListener() {
 			
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				Hunter h = clearHunter();
 				HiredHunterFrame.currentHunters--;
@@ -97,7 +95,6 @@ public class HiredHunter implements Serializable {
 		pickedHunt = new JButton("Toggle Picked");
 		pickedHunt.addActionListener(new ActionListener() {
 			
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				toggleHuntPicked();
 			}
@@ -105,7 +102,6 @@ public class HiredHunter implements Serializable {
 		skipHunter = new JButton("Skip Hunter");
 		skipHunter.addActionListener(new ActionListener() {
 			
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				Hunter h = clearHunter();
 				HiredHunterFrame.currentHunters--;
