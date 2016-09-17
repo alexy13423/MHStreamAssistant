@@ -14,7 +14,9 @@ PLEASE make sure to use a separate bot account with this program; don't
 use your main Twitch account to login to this bot. The source code is
 available here, obviously, so you can read through it if you're really
 concerned about security issues, but you should still always use a bot
-account for bots, to keep your own account safe.
+account for bots, to keep your own account safe. If you don't know where
+to get your authentication key for a Twitch account, you can find it
+[here.](http://twitchapps.com/tmi/)
 
 The commands that the bot listen to are as follows:
 
