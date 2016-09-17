@@ -104,9 +104,11 @@ public class SaveState implements Serializable {
 			SaveState loadedState = (SaveState) listIn.readObject();
 			backupHunterList = loadedState.getBackupHunters();
 			priorityList = loadedState.getUsedPriority();
+			backupPriorityList = loadedState.getBackupPriority();
+			PriorityListFrame.backupPriorityListRestore(backupPriorityList);
 			if (priorityList) {
-				backupPriorityList = loadedState.getBackupPriority();
-				PriorityListFrame.backupPriorityListRestore(backupPriorityList);
+				System.out.println("doot");
+				
 				MHStreamAssistant.priorityListPresent = true;
 				PriorityListFrame.disableLoadListButton();
 			}
