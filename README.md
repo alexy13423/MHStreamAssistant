@@ -18,8 +18,8 @@ account for bots, to keep your own account safe.
 
 The commands that the bot listen to are as follows:
 
-!hire: This registers viewers into the queue. The syntax is !hire <name>
-<HR>, i.e. !hire Rose 211. Names can be multiple words, so you can go ham.
+!hire: This registers viewers into the queue. The syntax is !hire (name)
+(HR), i.e. !hire Rose 211. Names can be multiple words, so you can go ham.
 
 !skip: This allows a viewer to voluntarily skip themselves, meaning that
 they won't be selected by any of the auto-hiring buttons in the hunter
