@@ -36,7 +36,6 @@ import javax.swing.JSeparator;
 import hunterbot.BotMessageQueue;
 import hunterbot.HiredHunter;
 import hunterbot.Hunter;
-import hunterbot.MHStreamAssistant;
 
 public class HiredHunterFrame {
 	
