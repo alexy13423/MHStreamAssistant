@@ -53,10 +53,12 @@ public class MHStreamAssistant {
 	private static Thread messageThread;
 	
 	public static boolean priorityListPresent;
+	public static boolean loginSuccess;
 	
 	public static void main(String[] args) {
 		
 		priorityListPresent = false;
+		loginSuccess = false;
 		
 		frame = new JFrame("Stream Assistant!");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -161,6 +163,7 @@ public class MHStreamAssistant {
 			JOptionPane.showMessageDialog(frame, "Unable to save login file. MHStreamAssistant will be unable to auto-load login details on next run.", "File Save Warning", JOptionPane.WARNING_MESSAGE);
 		} finally {
 			startProgram();
+			loginSuccess = true;
 		}
 	}
 	

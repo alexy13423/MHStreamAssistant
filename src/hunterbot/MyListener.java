@@ -140,7 +140,10 @@ public class MyListener extends ListenerAdapter {
 		System.out.println("Join success!");
 		Channel thing = event.getChannel();
 		output = thing.send();
-		MHStreamAssistant.connectionSuccess();
+		if (MHStreamAssistant.loginSuccess == false) {
+			MHStreamAssistant.connectionSuccess();
+		}
+		
 		//BotMessageQueue.messageOutput = thing.send();
 		//BotMessageQueue.priorityMessageTimer.start();
 		//BotMessageQueue.regularMessageTimer.start();
