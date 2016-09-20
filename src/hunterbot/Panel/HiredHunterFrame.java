@@ -100,7 +100,7 @@ public class HiredHunterFrame {
 				int save = JOptionPane.showOptionDialog(frame, "Save the priority list?", "Save List Confirmation", 
 						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 				if (save == 0) {
-					boolean saveSuccess = PriorityListFrame.savePrioritylist();
+					boolean saveSuccess = PriorityListFrame.savePriorityList();
 					if (!saveSuccess)
 						return;
 				}

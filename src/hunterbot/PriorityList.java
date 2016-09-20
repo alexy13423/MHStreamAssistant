@@ -41,7 +41,7 @@ public class PriorityList extends DefaultListModel<PriorityEntry> implements Ser
 	public PriorityList() {
 	}
 	
-	public void savePriorityList(Vector<Hunter> hunterList) {
+	public void savePriorityList(Vector<Hunter> hunterList) throws IOException{
 		
 		Vector<String> playedViewers = HunterTableFrame.getPlayedViewers();
 		
@@ -72,14 +72,10 @@ public class PriorityList extends DefaultListModel<PriorityEntry> implements Ser
 		Object[] priorityArray = this.toArray();
 		
 		//Write priority list to file.
-		try {
-			FileOutputStream fileOut = new FileOutputStream("priority.ser");
-			ObjectOutputStream listOut = new ObjectOutputStream(fileOut);
-			listOut.writeObject(priorityArray);
-			listOut.close();
-		} catch (IOException i) {
-			i.printStackTrace();
-		}
+		FileOutputStream fileOut = new FileOutputStream("priority.ser");
+		ObjectOutputStream listOut = new ObjectOutputStream(fileOut);
+		listOut.writeObject(priorityArray);
+		listOut.close();
 	}
 	
 	public void loadPriorityList() {

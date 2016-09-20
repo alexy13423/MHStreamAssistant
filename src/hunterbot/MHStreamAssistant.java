@@ -157,10 +157,14 @@ public class MHStreamAssistant {
 			configOut.writeObject(newConfig);
 			configOut.close();
 		} catch (IOException i) {
-			i.printStackTrace();
+			//System.out.println("Message: " + message);
+			JOptionPane.showMessageDialog(frame, "Unable to save login file. MHStreamAssistant will be unable to auto-load login details on next run.", "File Save Warning", JOptionPane.WARNING_MESSAGE);
+		} finally {
+			startProgram();
 		}
-		
-		
+	}
+	
+	private static void startProgram() {
 		messageThread = new Thread(new BotMessageQueue());
 		messageThread.start();
 		Point p = frame.getLocation();

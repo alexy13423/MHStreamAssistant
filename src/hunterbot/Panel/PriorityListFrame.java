@@ -24,6 +24,7 @@ import java.awt.FlowLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Vector;
 
 import javax.swing.BoxLayout;
@@ -74,7 +75,12 @@ public class PriorityListFrame {
 				
 				if (HiredHunterFrame.getHunterCount() == 0) {
 					Vector<Hunter> hunterList = HunterTableFrame.getHunterList();
-					priorityList.savePriorityList(hunterList);
+					try {
+						priorityList.savePriorityList(hunterList);
+					} catch (IOException i) {
+						JOptionPane.showMessageDialog(frame, "Unable to save priority list!", "Save Error", JOptionPane.ERROR_MESSAGE);
+					}
+					
 				}
 				else {
 					JOptionPane.showMessageDialog(frame, "Please dismiss all hunters before saving the list!");
@@ -175,10 +181,16 @@ public class PriorityListFrame {
 		priorityListView.setModel(priorityList);
 	}
 	
-	public static boolean savePrioritylist() {
+	public static boolean savePriorityList() {
 		if (HiredHunterFrame.getHunterCount() == 0) {
 			Vector<Hunter> hunterList = HunterTableFrame.getHunterList();
-			priorityList.savePriorityList(hunterList);
+			try {
+				priorityList.savePriorityList(hunterList);
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(frame, "Unable to save priority list!", "Save Error", JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
+			
 			return true;
 		}
 		else {
