@@ -48,12 +48,15 @@ public class HunterTableFrame {
 	private JFrame frame;
 	private static HunterTableModel hunterTableModel;
 	private static JTable hunterTable;
+	private static Vector<String> playedViewers;
 	
 	public HunterTableFrame() {
 		frame = new JFrame("Hunter List");
 		frame.setSize(800, 800);
 		frame.setVisible(false);
 		frame.setBackground(Color.CYAN);
+		
+		playedViewers = new Vector<String>();
 		
 		JScrollPane hunterScroll = new JScrollPane();
 		hunterTableModel = new HunterTableModel();
@@ -341,8 +344,15 @@ public class HunterTableFrame {
 			String tableNameLower = thisHunter.getTwitchName().toLowerCase();
 			String newNameLower = name.toLowerCase();
 			if (tableNameLower.equals(newNameLower)) {
-				BotMessageQueue.addRegularMessage(BotMessageQueue.MessageType.QUEUEALREADYPRESENT, name);
-				return;
+				if (OptionsFrame.getRepeatSignups() == false) {
+					BotMessageQueue.addRegularMessage(BotMessageQueue.MessageType.QUEUEALREADYPRESENT, name);
+					return;
+				}
+				Hunter.State state = thisHunter.getState();
+				if (state != Hunter.State.PLAYED) {
+					BotMessageQueue.addRegularMessage(BotMessageQueue.MessageType.QUEUEALREADYPRESENT, name);
+					return;
+				}
 			}
 		}
 		int priority = PriorityListFrame.searchPriorityList(name);
@@ -352,15 +362,16 @@ public class HunterTableFrame {
 	}
 	
 	public static void updateHunter(Hunter h) {
+		int lastIndex = -1;
 		for (int i = 0; i < hunterTableModel.getRowCount(); i++) {
 			Hunter thisHunter = hunterTableModel.getHunter(i);
 			String tableNameLower = thisHunter.getTwitchName().toLowerCase();
 			String newNameLower = h.getTwitchName().toLowerCase();
 			if (tableNameLower.equals(newNameLower)) {
-				hunterTableModel.updateHunter(i, h);
-				return;
+				lastIndex = i;
 			}
 		}
+		hunterTableModel.updateHunter(lastIndex, h);
 	}
 	
 	public static Vector<Hunter> getHunterList() {
@@ -378,6 +389,14 @@ public class HunterTableFrame {
 	public static int getCurrentQueueNumber(int level) {
 		int result = hunterTableModel.checkQueueAtPriorityLevel(level) + 1;
 		return result;
+	}
+	
+	public static Vector<String> getPlayedViewers() {
+		return playedViewers;
+	}
+	
+	public static void addPlayedViewer(String name) {
+		playedViewers.add(name);
 	}
 	
 }

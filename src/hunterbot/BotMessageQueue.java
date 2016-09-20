@@ -89,6 +89,8 @@ public class BotMessageQueue implements Runnable{
 	private static int ubwCount;
 	
 	public BotMessageQueue() {
+		messageOutput = MyListener.getOutput();
+		
 		priorityMessageQueue = new LinkedList<String>();
 		userMessageArray = new Vector<Vector<String>>();
 		for (int i = 0; i < 20; i++) {
@@ -200,6 +202,9 @@ public class BotMessageQueue implements Runnable{
 		regularMessageTimer.setRepeats(true);
 		
 		ubwCount = 0;
+		
+		priorityMessageTimer.start();
+		regularMessageTimer.start();
 	}
 	
 	@Override

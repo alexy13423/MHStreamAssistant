@@ -25,11 +25,15 @@ import java.util.Vector;
 import org.pircbotx.Channel;
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.JoinEvent;
+import org.pircbotx.hooks.events.NoticeEvent;
 import org.pircbotx.hooks.types.GenericMessageEvent;
+import org.pircbotx.output.OutputChannel;
 
 import hunterbot.Panel.HunterTableFrame;
 import hunterbot.Panel.OptionsFrame;
 public class MyListener extends ListenerAdapter {
+	
+	private static OutputChannel output;
 	
 	public MyListener() {
 	}
@@ -133,10 +137,31 @@ public class MyListener extends ListenerAdapter {
 	}
 	
 	public void onJoin(JoinEvent event) {
+		System.out.println("Join success!");
 		Channel thing = event.getChannel();
-		BotMessageQueue.messageOutput = thing.send();
-		BotMessageQueue.priorityMessageTimer.start();
-		BotMessageQueue.regularMessageTimer.start();
+		output = thing.send();
+		MHStreamAssistant.connectionSuccess();
+		//BotMessageQueue.messageOutput = thing.send();
+		//BotMessageQueue.priorityMessageTimer.start();
+		//BotMessageQueue.regularMessageTimer.start();
+	}
+	/*
+	public void onConnectAttemptFailed(ConnectAttemptFailedEvent event) {
+		System.out.println("Connection failed!");
+		
+		
+	}*/
+	
+	public void onNotice(NoticeEvent event) {
+		String notice = event.getNotice();
+		if (notice.equals("Login authentication failed") || notice.equals("Improperly formatted auth")) {
+			System.out.println("Bloop!");
+			MHStreamAssistant.connectionFail();
+		}
+	}
+	
+	public static OutputChannel getOutput() {
+		return output;
 	}
 	
 }

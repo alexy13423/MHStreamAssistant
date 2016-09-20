@@ -29,6 +29,8 @@ import java.util.Vector;
 
 import javax.swing.DefaultListModel;
 
+import hunterbot.Panel.HunterTableFrame;
+
 public class PriorityList extends DefaultListModel<PriorityEntry> implements Serializable {
 
 	/**
@@ -41,15 +43,28 @@ public class PriorityList extends DefaultListModel<PriorityEntry> implements Ser
 	
 	public void savePriorityList(Vector<Hunter> hunterList) {
 		
+		Vector<String> playedViewers = HunterTableFrame.getPlayedViewers();
+		
 		for (int i = 0; i < hunterList.size(); i++) {
 			Hunter hunter = hunterList.get(i);
+			String name = hunter.getTwitchName();
+			boolean hasPlayed = false;
+			for (int j = 0; j < playedViewers.size(); j++) {
+				String playedName = playedViewers.get(j);
+				if (name.equals(playedName)) {
+					hasPlayed = true;
+					break;
+				}
+			}
+			if (hasPlayed)
+				continue;
+			
 			Hunter.State hunterState = hunter.getState();
 			if (hunterState == Hunter.State.WAITING || hunterState == Hunter.State.PRIORITYWAITING || hunterState == Hunter.State.SKIPPED) {
-				String twitchName = hunter.getTwitchName();
 				PriorityNumber queueNumber = hunter.getPriority();
 				int priorityLevel = queueNumber.getPriorityLevel();
 				priorityLevel++;
-				PriorityEntry newEntry = new PriorityEntry(twitchName, priorityLevel);
+				PriorityEntry newEntry = new PriorityEntry(name, priorityLevel);
 				this.addElement(newEntry);
 			}
 		}

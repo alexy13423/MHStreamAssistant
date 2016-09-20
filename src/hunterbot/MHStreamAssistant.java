@@ -34,6 +34,7 @@ import java.util.Scanner;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -48,7 +49,7 @@ public class MHStreamAssistant {
 	private static String authKey;
 	private static String targetChannelName;
 	
-	private static Thread botThread;
+	private static ChatBotThread botThread;
 	private static Thread messageThread;
 	
 	public static boolean priorityListPresent;
@@ -140,26 +141,38 @@ public class MHStreamAssistant {
 				authKey = String.copyValueOf(authKeyEntry);
 				targetChannelName = channelName.getText().toLowerCase();
 				
-				LoginConfig newConfig = new LoginConfig(accountName, authKey, targetChannelName);
-				try {
-					FileOutputStream fileOut = new FileOutputStream("login.ser");
-					ObjectOutputStream configOut = new ObjectOutputStream(fileOut);
-					configOut.writeObject(newConfig);
-					configOut.close();
-				} catch (IOException i) {
-					i.printStackTrace();
-				}
-				
-				botThread = new Thread(new ChatBotThread(accountName, authKey, targetChannelName));
-				messageThread = new Thread(new BotMessageQueue());
+				botThread = new ChatBotThread(accountName, authKey, targetChannelName);
 				botThread.start();
-				messageThread.start();
-				Point p = frame.getLocation();
-				frame.setVisible(false);
-				HiredHunterFrame hhFrame = new HiredHunterFrame(p);
-				hhFrame.setVisible(true);
+				
+				//connectionFail();
 			}
 		});
+	}
+	
+	public static void connectionSuccess() {
+		LoginConfig newConfig = new LoginConfig(accountName, authKey, targetChannelName);
+		try {
+			FileOutputStream fileOut = new FileOutputStream("login.ser");
+			ObjectOutputStream configOut = new ObjectOutputStream(fileOut);
+			configOut.writeObject(newConfig);
+			configOut.close();
+		} catch (IOException i) {
+			i.printStackTrace();
+		}
+		
+		
+		messageThread = new Thread(new BotMessageQueue());
+		messageThread.start();
+		Point p = frame.getLocation();
+		frame.setVisible(false);
+		HiredHunterFrame hhFrame = new HiredHunterFrame(p);
+		hhFrame.setVisible(true);
+	}
+	
+	public static void connectionFail() {
+		botThread.stopBot();
+		JOptionPane.showMessageDialog(frame, "Unable to connect to Twitch IRC.", "Bot Connection Error", JOptionPane.ERROR_MESSAGE);
+		System.out.println("Bot stopped!");
 	}
 	
 	public static boolean isInteger(String s, int radix) {

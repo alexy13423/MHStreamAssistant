@@ -23,22 +23,43 @@ import java.io.IOException;
 
 import org.pircbotx.exception.IrcException;
 
-public class ChatBotThread implements Runnable {
+public class ChatBotThread extends Thread {
 
 	private ChatBot bot;
+	private boolean running;
+	
+	private Thread t;
 	
 	public ChatBotThread(String a, String b, String c) {
 		bot = new ChatBot(a, b, c);
+		running = false;
 	}
 	
 	@Override
 	public void run() {
-		try {
-			bot.startBot();
-		} catch (IrcException | IOException e) {
-			e.printStackTrace();
+		while (running) {
+			try {
+				bot.startBot();
+			} catch (IrcException | IOException e) {
+				e.printStackTrace();
+			}
 		}
-		
+		System.out.println("doop");
+		return;
+	}
+	
+	public void start() {
+		if (t == null) {
+			t = new Thread(this, "botThread");
+			t.start();
+			running = true;
+		}
+	}
+	
+	public void stopBot() {
+		bot.closeBot();
+		running = false;
+		System.out.println("deep");
 	}
 
 }

@@ -90,6 +90,7 @@ public class HiredHunter implements Serializable {
 				HunterTableFrame.updateHunter(h);
 				String name = h.getTwitchName();
 				BotMessageQueue.addRegularMessage(BotMessageQueue.MessageType.TURNDONE, name);
+				HunterTableFrame.addPlayedViewer(h.getTwitchName());
 			}
 		});
 		pickedHunt = new JButton("Toggle Picked");

@@ -24,7 +24,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -39,15 +41,16 @@ public class OptionsFrame {
 	private JFrame frame;
 	
 	private static boolean signupsActive;
-	
+	private static boolean repeatSignups;
 	private static Timer backupTimer;
 	
 	public OptionsFrame() {
 		frame = new JFrame("Options");
-		frame.setSize(400, 80);
+		frame.setSize(400, 160);
 		frame.setVisible(false);
 		
 		signupsActive = false;
+		repeatSignups = true;
 		
 		int backupDelay = 300000;
 		ActionListener backupTimerAction = new ActionListener() {
@@ -57,7 +60,10 @@ public class OptionsFrame {
 			}
 		};
 		backupTimer = new Timer(backupDelay, backupTimerAction);
-		JPanel options = new JPanel();
+		JPanel optionsMain = new JPanel();
+		optionsMain.setLayout(new BoxLayout(optionsMain, BoxLayout.Y_AXIS));
+		
+		JPanel optionsButtons = new JPanel();
 		
 		JButton toggleBotButton = new JButton("Turn Bot On");
 		toggleBotButton.addActionListener(new ActionListener() {
@@ -94,10 +100,28 @@ public class OptionsFrame {
 			}
 		});
 		
-		options.add(toggleBotButton);
-		options.add(saveStateButton);
-		options.add(loadStateButton);
-		frame.add(options);
+		optionsButtons.add(toggleBotButton);
+		optionsButtons.add(saveStateButton);
+		optionsButtons.add(loadStateButton);
+		optionsMain.add(optionsButtons);
+		
+		JPanel optionsChecks = new JPanel();
+		
+		JCheckBox testButton = new JCheckBox("Enable Repeat Signups");
+		testButton.setSelected(true);
+		testButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				JCheckBox box = (JCheckBox) e.getSource();
+				repeatSignups = box.isSelected();
+				//System.out.println("Signups repeat: " + repeatSignups);
+			}
+		});
+		optionsChecks.add(testButton);
+		optionsMain.add(optionsChecks);
+		frame.add(optionsMain);
 	}
 	
 	public void setVisible(boolean b) {
@@ -110,6 +134,10 @@ public class OptionsFrame {
 	
 	public static boolean getSignupsActive() {
 		return signupsActive;
+	}
+	
+	public static boolean getRepeatSignups() {
+		return repeatSignups;
 	}
 	
 	private void saveBackup() {
