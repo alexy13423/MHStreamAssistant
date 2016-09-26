@@ -38,6 +38,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import com.google.api.services.sheets.v4.model.ValueRange;
+
 import hunterbot.BotMessageQueue;
 import hunterbot.Hunter;
 import hunterbot.HunterTableModel;
@@ -397,6 +399,10 @@ public class HunterTableFrame {
 	
 	public static void addPlayedViewer(String name) {
 		playedViewers.add(name);
+	}
+	
+	public static ValueRange getSpreadsheetOutput() {
+		return hunterTableModel.getSpreadsheetOutput();
 	}
 	
 }

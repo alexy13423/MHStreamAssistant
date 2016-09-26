@@ -84,13 +84,15 @@ public class HiredHunter implements Serializable {
 		rotateOut.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				Hunter h = clearHunter();
-				HiredHunterFrame.currentHunters--;
-				h.setState(Hunter.State.PLAYED);
-				HunterTableFrame.updateHunter(h);
-				String name = h.getTwitchName();
-				BotMessageQueue.addRegularMessage(BotMessageQueue.MessageType.TURNDONE, name);
-				HunterTableFrame.addPlayedViewer(h.getTwitchName());
+				if (hasHunter) {
+					Hunter h = clearHunter();
+					HiredHunterFrame.currentHunters--;
+					h.setState(Hunter.State.PLAYED);
+					HunterTableFrame.updateHunter(h);
+					String name = h.getTwitchName();
+					BotMessageQueue.addRegularMessage(BotMessageQueue.MessageType.TURNDONE, name);
+					HunterTableFrame.addPlayedViewer(h.getTwitchName());
+				}
 			}
 		});
 		pickedHunt = new JButton("Toggle Picked");
@@ -104,12 +106,14 @@ public class HiredHunter implements Serializable {
 		skipHunter.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				Hunter h = clearHunter();
-				HiredHunterFrame.currentHunters--;
-				h.setState(Hunter.State.SKIPPED);
-				HunterTableFrame.updateHunter(h);
-				String name = h.getTwitchName();
-				BotMessageQueue.addRegularMessage(BotMessageQueue.MessageType.TURNSKIPPED, name);
+				if (hasHunter) {
+					Hunter h = clearHunter();
+					HiredHunterFrame.currentHunters--;
+					h.setState(Hunter.State.SKIPPED);
+					HunterTableFrame.updateHunter(h);
+					String name = h.getTwitchName();
+					BotMessageQueue.addRegularMessage(BotMessageQueue.MessageType.TURNSKIPPED, name);
+				}
 			}
 		});
 		returnToQueue = new JButton("Undo Hire");
@@ -117,17 +121,19 @@ public class HiredHunter implements Serializable {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Hunter h = clearHunter();
-				HiredHunterFrame.currentHunters--;
-				PriorityNumber p = h.getPriority();
-				int pLevel = p.getPriorityLevel();
-				if (pLevel > 0) {
-					h.setState(Hunter.State.PRIORITYWAITING);
+				if (hasHunter) {
+					Hunter h = clearHunter();
+					HiredHunterFrame.currentHunters--;
+					PriorityNumber p = h.getPriority();
+					int pLevel = p.getPriorityLevel();
+					if (pLevel > 0) {
+						h.setState(Hunter.State.PRIORITYWAITING);
+					}
+					else h.setState(Hunter.State.WAITING);
+					HunterTableFrame.updateHunter(h);
+					String name = h.getTwitchName();
+					BotMessageQueue.addRegularMessage(BotMessageQueue.MessageType.TURNUNDONE, name);
 				}
-				else h.setState(Hunter.State.WAITING);
-				HunterTableFrame.updateHunter(h);
-				String name = h.getTwitchName();
-				BotMessageQueue.addRegularMessage(BotMessageQueue.MessageType.TURNUNDONE, name);
 			}
 		});
 		bailHunter = new JButton("Hunter Bailed!");
@@ -135,12 +141,14 @@ public class HiredHunter implements Serializable {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Hunter h = clearHunter();
-				HiredHunterFrame.currentHunters--;
-				h.setState(Hunter.State.BAILED);
-				HunterTableFrame.updateHunter(h);
-				String name = h.getTwitchName();
-				BotMessageQueue.addRegularMessage(BotMessageQueue.MessageType.TURNBAILED, name);
+				if (hasHunter) {
+					Hunter h = clearHunter();
+					HiredHunterFrame.currentHunters--;
+					h.setState(Hunter.State.BAILED);
+					HunterTableFrame.updateHunter(h);
+					String name = h.getTwitchName();
+					BotMessageQueue.addRegularMessage(BotMessageQueue.MessageType.TURNBAILED, name);
+				}
 			}
 		});
 		

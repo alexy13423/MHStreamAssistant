@@ -19,18 +19,25 @@
 
 package hunterbot;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
+import com.google.api.services.sheets.v4.model.ValueRange;
+
 public class HunterTableModel extends AbstractTableModel {
 	
 	private static final long serialVersionUID = 1L;
-	private Vector<Hunter> hunterList;
+	private static Vector<Hunter> hunterList;
 	private String[] columnNames = {"Queue #", "Status", "Twitch Name", "Hunter Name", "HR", "HR Group"};
 
+	private static int maxEntries;
+	
 	public HunterTableModel() {
 		hunterList = new Vector<Hunter>();
+		maxEntries = 0;
 	}
 	
 	public void addHunter(Hunter newHunter) {
@@ -49,6 +56,7 @@ public class HunterTableModel extends AbstractTableModel {
 		}
 		if (newPriority == 0 || !added) {
 			hunterList.add(newHunter);
+			maxEntries++;
 		}
 		this.fireTableDataChanged();
 	}
@@ -183,6 +191,39 @@ public class HunterTableModel extends AbstractTableModel {
 
 	public boolean isCellEditable(int arg0, int arg1) {
 		return false;
+	}
+	
+	public ValueRange getSpreadsheetOutput() {
+		ValueRange object = new ValueRange();
+		
+		List<List<Object>> values = new ArrayList<List<Object>>();
+		
+		for (int i = 0; i < maxEntries; i++) {
+			List<Object> row = new ArrayList<Object>();
+			if (i < hunterList.size()) {
+				Hunter hunter = hunterList.get(i);
+				row.add(hunter.getPriority().toString());
+				row.add(hunter.getState().toString());
+				row.add(hunter.getTwitchName());
+				row.add(hunter.getHunterName());
+				int rank = hunter.getHunterRank();
+				row.add(rank);
+				if (rank < 4) {
+					row.add("LR");
+				} else if (rank < 8) {
+					row.add("HR");
+				} else {
+					row.add("HR Break");
+				}
+			} else {
+				for (int j = 0; j < 6; j++) {
+					row.add("");
+				}
+			}
+			values.add(row);
+		}
+		object.setValues(values);
+		return object;
 	}
 
 }
