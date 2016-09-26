@@ -47,10 +47,11 @@ public class HiredHunterFrame {
 	private HunterTableFrame htFrame;
 	private OptionsFrame oFrame;
 	private PriorityListFrame plFrame;
+	private ListOptionsFrame loFrame;
 	
 	public HiredHunterFrame(Point p) {
 		frame = new JFrame("Hired Hunters");
-		frame.setSize(450, 850);
+		frame.setSize(500, 850);
 		frame.setLocation(p);
 		frame.setVisible(false);
 		frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
@@ -131,6 +132,7 @@ public class HiredHunterFrame {
 		htFrame = new HunterTableFrame();
 		oFrame = new OptionsFrame();
 		plFrame = new PriorityListFrame();
+		loFrame = new ListOptionsFrame();
 		
 		JButton htButton = new JButton("Hunter Table");
 		htButton.addActionListener(new ActionListener() {
@@ -159,6 +161,14 @@ public class HiredHunterFrame {
 			}
 		});
 		
+		JButton loButton = new JButton("List Options");
+		loButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				loFrame.setVisible(true);
+			}
+		});
+		
 		JButton cButton = new JButton("About");
 		cButton.addActionListener(new ActionListener() {
 			
@@ -168,9 +178,12 @@ public class HiredHunterFrame {
 			}
 		});
 		
+		
+		
 		menuPanel.add(htButton);
 		menuPanel.add(plButton);
 		menuPanel.add(oButton);
+		menuPanel.add(loButton);
 		menuPanel.add(cButton);
 		frame.add(menuPanel);
 		

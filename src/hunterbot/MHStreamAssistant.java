@@ -145,8 +145,6 @@ public class MHStreamAssistant {
 				
 				botThread = new ChatBotThread(accountName, authKey, targetChannelName);
 				botThread.start();
-				
-				//connectionFail();
 			}
 		});
 	}

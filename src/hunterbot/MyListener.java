@@ -30,6 +30,7 @@ import org.pircbotx.hooks.types.GenericMessageEvent;
 import org.pircbotx.output.OutputChannel;
 
 import hunterbot.Panel.HunterTableFrame;
+import hunterbot.Panel.ListOptionsFrame;
 import hunterbot.Panel.OptionsFrame;
 public class MyListener extends ListenerAdapter {
 	
@@ -127,7 +128,14 @@ public class MyListener extends ListenerAdapter {
     		BotMessageQueue.addRegularMessage(BotMessageQueue.MessageType.UPNEXT, "");
     	}
     	else if (command.equals("!list")) {
-    		BotMessageQueue.addRegularMessage(BotMessageQueue.MessageType.LISTEMP, "");
+    		//BotMessageQueue.addRegularMessage(BotMessageQueue.MessageType.LISTEMP, "");
+    		if (ListOptionsFrame.getListActive()) {
+    			String url = "https://docs.google.com/spreadsheets/d/" + ListOptionsFrame.getSpreadsheetId();
+    			BotMessageQueue.addPriorityMessage("Here's the list: " + url);
+    		} else {
+    			BotMessageQueue.addPriorityMessage("There is no list currently linked!");
+    		}
+    		
     	}
     	else if (command.equals("!ubw")) {
     		if (name.equals("cmdrrose")) {
