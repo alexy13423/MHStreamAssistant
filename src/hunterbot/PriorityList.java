@@ -72,10 +72,9 @@ public class PriorityList extends DefaultListModel<PriorityEntry> implements Ser
 		Object[] priorityArray = this.toArray();
 		
 		//Write priority list to file.
-		FileOutputStream fileOut = new FileOutputStream("priority.ser");
-		ObjectOutputStream listOut = new ObjectOutputStream(fileOut);
-		listOut.writeObject(priorityArray);
-		listOut.close();
+		try (FileOutputStream fileOut = new FileOutputStream("priority.ser"); ObjectOutputStream listOut = new ObjectOutputStream(fileOut)) {
+			listOut.writeObject(priorityArray);
+		}
 	}
 	
 	public void loadPriorityList() {

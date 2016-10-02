@@ -94,6 +94,22 @@ public class HunterTableModel extends AbstractTableModel {
 		return result;
 	}
 	
+	public int getQueuePosition(String twitchName) {
+		int spaces = 0;
+		for (int i = 0; i < hunterList.size(); i++) {
+			Hunter hunter = hunterList.get(i);
+			Hunter.State hunterState = hunter.getState();
+			if (hunterState == Hunter.State.PRIORITYWAITING || hunterState == Hunter.State.WAITING) {
+				String name = hunter.getTwitchName().toLowerCase();
+				if (twitchName.equals(name)) {
+					return spaces;
+				}
+				else spaces++;
+			}
+		}
+		return -1;
+	}
+	
 	public void setHunterList(Vector<Hunter> backupList) {
 		hunterList = backupList;
 		this.fireTableDataChanged();
@@ -224,6 +240,14 @@ public class HunterTableModel extends AbstractTableModel {
 		}
 		object.setValues(values);
 		return object;
+	}
+	
+	public void setMaxEntries(int entries) {
+		maxEntries = entries;
+	}
+	
+	public int getMaxEntries() {
+		return maxEntries;
 	}
 
 }

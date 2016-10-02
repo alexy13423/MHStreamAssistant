@@ -60,20 +60,15 @@ public class MHStreamAssistant {
 		priorityListPresent = false;
 		loginSuccess = false;
 		
-		frame = new JFrame("Stream Assistant!");
+		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(300,  300);
+		frame.setResizable(false);
 		
 		LoginConfig config = null;
-		try {
-			FileInputStream fileIn = new FileInputStream("login.ser");
-			ObjectInputStream configIn = new ObjectInputStream(fileIn);
+		try (FileInputStream fileIn = new FileInputStream("login.ser");ObjectInputStream configIn = new ObjectInputStream(fileIn)) {
 			config = (LoginConfig) configIn.readObject();
-			configIn.close();
-		} catch (IOException e) {
-			
-		} catch (ClassNotFoundException e) {
-			
+		} catch (Exception e) {
 		}
 		
 		JPanel loginPanel = new JPanel();
@@ -151,13 +146,9 @@ public class MHStreamAssistant {
 	
 	public static void connectionSuccess() {
 		LoginConfig newConfig = new LoginConfig(accountName, authKey, targetChannelName);
-		try {
-			FileOutputStream fileOut = new FileOutputStream("login.ser");
-			ObjectOutputStream configOut = new ObjectOutputStream(fileOut);
+		try (FileOutputStream fileOut = new FileOutputStream("login.ser"); ObjectOutputStream configOut = new ObjectOutputStream(fileOut)){
 			configOut.writeObject(newConfig);
-			configOut.close();
 		} catch (IOException i) {
-			//System.out.println("Message: " + message);
 			JOptionPane.showMessageDialog(frame, "Unable to save login file. MHStreamAssistant will be unable to auto-load login details on next run.", "File Save Warning", JOptionPane.WARNING_MESSAGE);
 		} finally {
 			startProgram();

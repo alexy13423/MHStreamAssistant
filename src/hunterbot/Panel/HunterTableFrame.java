@@ -25,6 +25,8 @@ import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.BoxLayout;
@@ -37,6 +39,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableRowSorter;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 
 import com.google.api.services.sheets.v4.model.ValueRange;
 
@@ -66,6 +71,19 @@ public class HunterTableFrame {
 		hunterScroll.setViewportView(hunterTable);
 		frame.add(hunterScroll);
 		
+		//hunterTable.setAutoCreateRowSorter(true);
+		
+		TableRowSorter<HunterTableModel> sorter = new TableRowSorter<HunterTableModel>(hunterTableModel);
+		List<RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
+		sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
+		sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
+		sorter.setSortKeys(sortKeys);
+		for (int i = 0; i < 6; i++) {
+			sorter.setSortable(i, false);
+		}
+		
+		hunterTable.setRowSorter(sorter);
+		
 		hunterTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
 			/**
 			 * 
@@ -76,8 +94,9 @@ public class HunterTableFrame {
 				
 		        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
 		        HunterTableModel model = (HunterTableModel) table.getModel();
-		        Hunter hunter = model.getHunter(row);
+		        Hunter hunter = model.getHunter(table.convertRowIndexToModel(row));
 		        Hunter.State state = hunter.getState();
+		        
 		        if (state == Hunter.State.PRIORITYWAITING){
 					setBackground(Color.CYAN);
 					setForeground(Color.BLACK);
@@ -103,7 +122,7 @@ public class HunterTableFrame {
 					setForeground(table.getForeground());
 				}
 		        return this;
-		    } 
+		    }
 		});
 		
 		JPanel hunterControls = new JPanel();
@@ -403,6 +422,10 @@ public class HunterTableFrame {
 	
 	public static ValueRange getSpreadsheetOutput() {
 		return hunterTableModel.getSpreadsheetOutput();
+	}
+	
+	public static int getMaxEntries() {
+		return hunterTableModel.getMaxEntries();
 	}
 	
 }

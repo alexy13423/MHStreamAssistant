@@ -21,7 +21,7 @@ package hunterbot;
 
 import java.io.Serializable;
 
-public class PriorityNumber implements Serializable{
+public class PriorityNumber implements Serializable, Comparable<PriorityNumber>{
 
 	/**
 	 * 
@@ -45,6 +45,28 @@ public class PriorityNumber implements Serializable{
 	
 	public String toString() {
 		return "L" + priorityLevel + "#" + queueNumber;
+	}
+
+	@Override
+	public int compareTo(PriorityNumber arg0) {
+		
+		int level = arg0.getPriorityLevel();
+		if (priorityLevel > level) {
+			return -1;
+		} else if (priorityLevel < level) {
+			return 1;
+		}
+		
+		int number = arg0.getQueueNumber();
+		
+		if (queueNumber > number) {
+			return 1;
+		}
+		else if (queueNumber < number) {
+			return -1;
+		}
+		
+		return 0;
 	}
 	
 }

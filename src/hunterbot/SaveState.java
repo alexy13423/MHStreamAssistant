@@ -40,26 +40,35 @@ public class SaveState implements Serializable {
 
 	private PriorityList backupPriorityList;
 	private Vector<Hunter> backupHunterList;
+	private int maxEntries;
 	private boolean priorityList;
+	private boolean firstPresent, secondPresent, thirdPresent;
 	private Hunter firstBackup, secondBackup, thirdBackup;
 	
 	public SaveState() {
-		backupPriorityList = null;
-		backupHunterList = null;
-		priorityList = MHStreamAssistant.priorityListPresent;
-		firstBackup = HiredHunterFrame.firstHunter.getHunter();
-		secondBackup = HiredHunterFrame.secondHunter.getHunter();
-		thirdBackup = HiredHunterFrame.thirdHunter.getHunter();
 	}
 	
 	public SaveState(PriorityList priority, Vector<Hunter> hunters) {
 		backupPriorityList = priority;
 		backupHunterList = hunters;
+		maxEntries = HunterTableFrame.getMaxEntries();
 		
 		priorityList = MHStreamAssistant.priorityListPresent;
-		firstBackup = HiredHunterFrame.firstHunter.getHunter();
-		secondBackup = HiredHunterFrame.secondHunter.getHunter();
-		thirdBackup = HiredHunterFrame.thirdHunter.getHunter();
+
+		firstPresent = HiredHunterFrame.firstHunter.getHasHunter();
+		if (firstPresent) {
+			firstBackup = HiredHunterFrame.firstHunter.getHunter();
+		}
+		
+		secondPresent = HiredHunterFrame.secondHunter.getHasHunter();
+		if (secondPresent) {
+			secondBackup = HiredHunterFrame.secondHunter.getHunter();
+		}
+		
+		thirdPresent = HiredHunterFrame.thirdHunter.getHasHunter();
+		if (thirdPresent) {
+			thirdBackup = HiredHunterFrame.thirdHunter.getHunter();
+		}
 	}
 	
 	public PriorityList getBackupPriority() {
@@ -70,8 +79,24 @@ public class SaveState implements Serializable {
 		return backupHunterList;
 	}
 	
+	public int getMaxEntries() {
+		return maxEntries;
+	}
+	
 	public boolean getUsedPriority() {
 		return priorityList;
+	}
+	
+	public boolean getHasFirst() {
+		return firstPresent;
+	}
+	
+	public boolean getHasSecond() {
+		return secondPresent;
+	}
+	
+	public boolean getHasThird() {
+		return thirdPresent;
 	}
 	
 	public Hunter getFirstHunter () {
@@ -86,48 +111,44 @@ public class SaveState implements Serializable {
 		return thirdBackup;
 	}
 	
-	public void doSaveState() {
-		try {
-			FileOutputStream fileOut = new FileOutputStream("backup.ser");
-			ObjectOutputStream listOut = new ObjectOutputStream(fileOut);
+	public void doSaveState() throws IOException {
+		try (FileOutputStream fileOut = new FileOutputStream("backup.ser"); ObjectOutputStream listOut = new ObjectOutputStream(fileOut)) {
 			listOut.writeObject(this);
-			listOut.close();
-		} catch (IOException i) {
-			i.printStackTrace();
 		}
 	}
 	
-	public void doLoadState() {
-		try {
-			FileInputStream fileIn = new FileInputStream("backup.ser");
-			ObjectInputStream listIn = new ObjectInputStream(fileIn);
+	public void doLoadState() throws IOException, ClassNotFoundException {
+		try (FileInputStream fileIn = new FileInputStream("backup.ser"); ObjectInputStream listIn = new ObjectInputStream(fileIn)) {
 			SaveState loadedState = (SaveState) listIn.readObject();
 			backupHunterList = loadedState.getBackupHunters();
 			priorityList = loadedState.getUsedPriority();
 			backupPriorityList = loadedState.getBackupPriority();
 			PriorityListFrame.backupPriorityListRestore(backupPriorityList);
 			if (priorityList) {
-				System.out.println("doot");
-				
 				MHStreamAssistant.priorityListPresent = true;
 				PriorityListFrame.disableLoadListButton();
 			}
 			
 			HunterTableFrame.getTableModel().setHunterList(backupHunterList);
+			System.out.println("Entries: " + loadedState.getMaxEntries());
+			HunterTableFrame.getTableModel().setMaxEntries(loadedState.getMaxEntries());
 			
-			firstBackup = loadedState.getFirstHunter();
-			secondBackup = loadedState.getSecondHunter();
-			thirdBackup = loadedState.getThirdHunter();
-			
-			HiredHunterFrame.firstHunter.setHunter(firstBackup);
-			HiredHunterFrame.secondHunter.setHunter(secondBackup);
-			HiredHunterFrame.thirdHunter.setHunter(thirdBackup);
-			
+			boolean first = loadedState.getHasFirst();
+			if (first) {
+				firstBackup = loadedState.getFirstHunter();
+				HiredHunterFrame.firstHunter.setHunter(firstBackup);
+			}
+			boolean second = loadedState.getHasSecond();
+			if (second) {
+				secondBackup = loadedState.getSecondHunter();
+				HiredHunterFrame.secondHunter.setHunter(secondBackup);
+			}
+			boolean third = loadedState.getHasThird();
+			if (third) {
+				thirdBackup = loadedState.getThirdHunter();
+				HiredHunterFrame.thirdHunter.setHunter(thirdBackup);
+			}
 			listIn.close();
-		} catch (IOException i) {
-			i.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		}
 	}
 	

@@ -33,10 +33,10 @@ import hunterbot.Panel.HunterTableFrame;
 public class BotMessageQueue implements Runnable{
 	
 	public static enum MessageType {
-		QUEUEDIRECTIONS("To sign up, use !hire <hunter name> <HR>. Please only put in a number for HR.", false),
+		QUEUEDIRECTIONS("To sign up, use !" + MyListener.getHireCommand() + " <hunter name> <HR>. Please only put in a number for HR.", false),
 		QUEUEADD("You've been added to queue!", true),
 		QUEUEALREADYPRESENT("You're already in the queue!", true),
-		QUEUEINVALID("Invalid syntax; please use !hire <hunter name> <HR>!", true),
+		QUEUEINVALID("Invalid syntax; please use !" + MyListener.getHireCommand() + " <hunter name> <HR>!", true),
 		QUEUEJOKERANK("You can't have a hunter rank less than 1, come on.", true),
 		QUEUENOTOPEN("Signups are currently not open!", false),
 		SKIPFAIL("You cannot currently skip your turn!", true),
@@ -56,7 +56,7 @@ public class BotMessageQueue implements Runnable{
 		TABLEMARKBAIL("You've apparently bailed on the stream!", true),
 		TABLEUNMARKBAIL("You've been unmarked as bailed by the streamer.", true),
 		
-		UPNEXT("", false);
+		STATUS("", true);
 		
 		private String message;
 		private boolean hasUser;
@@ -93,7 +93,7 @@ public class BotMessageQueue implements Runnable{
 		
 		priorityMessageQueue = new LinkedList<String>();
 		userMessageArray = new Vector<Vector<String>>();
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 21; i++) {
 			userMessageArray.add(new Vector<String>());
 		}
 		regularMessageOrder = new int[21];
@@ -185,7 +185,7 @@ public class BotMessageQueue implements Runnable{
 					outputRegularMessage(MessageType.TABLEUNMARKBAIL);
 					break;
 				case 20:
-					doNextUpCommand();
+					doStatusCommand();
 					break;
 				default:
 					return;
@@ -233,7 +233,7 @@ public class BotMessageQueue implements Runnable{
 			regularMessageOrder[messageOrdinal] = currentMessagePriority;
 		}
 		
-		if (messageOrdinal != 0 && messageOrdinal != 5 && messageOrdinal != 10 && messageOrdinal != 20) {
+		if (messageOrdinal != 0 && messageOrdinal != 5 && messageOrdinal != 10) {
 			Vector<String> names = userMessageArray.get(messageOrdinal);
 			for (int i = 0; i < names.size(); i++) {
 				if (names.get(i).equals(name))
@@ -267,8 +267,19 @@ public class BotMessageQueue implements Runnable{
 		}
 	}
 	
-	private void doNextUpCommand() {
+	private void doStatusCommand() {
+		String name = userMessageArray.get(20).remove(0);
+		
 		HunterTableModel model = HunterTableFrame.getTableModel();
+		int queuePosition = model.getQueuePosition(name) + 1;
+		if (queuePosition > 0) {
+			messageOutput.message(name + ": Your current position in the queue is " + queuePosition + "!");
+		}
+		else {
+			messageOutput.message(name + ": You aren't currently in the queue!");
+		}
+		
+		/*
 		Vector<Hunter> hunters = model.getNextThreeHunters();
 		int numHunters = hunters.size();
 		switch (numHunters) {
@@ -284,7 +295,7 @@ public class BotMessageQueue implements Runnable{
 		case 3:
 			messageOutput.message("The next three hunters up to hunt are " + hunters.get(0).getTwitchName() + ", " + hunters.get(1).getTwitchName() + ", and " + hunters.get(2).getTwitchName() + ".");
 			break;
-		}
+		}*/
 	}
 	
 	public static void doUBW() {

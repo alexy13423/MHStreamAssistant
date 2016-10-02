@@ -36,7 +36,10 @@ public class MyListener extends ListenerAdapter {
 	
 	private static OutputChannel output;
 	
+	private static String hireCommand;
+	
 	public MyListener() {
+		hireCommand = "hire";
 	}
 	
 	public void onGenericMessage(GenericMessageEvent event) {
@@ -45,7 +48,7 @@ public class MyListener extends ListenerAdapter {
     	System.out.println(name + ": " + message);
     	StringTokenizer messageTokens = new StringTokenizer(message);
     	String command = messageTokens.nextToken();
-    	if (command.equals("!hire")) {
+    	if (command.equals("!" + hireCommand)) {
 	    	if (OptionsFrame.getSignupsActive()) {
 	    		StringTokenizer token = new StringTokenizer(message);
 	    		if (token.countTokens() == 1) {
@@ -124,11 +127,10 @@ public class MyListener extends ListenerAdapter {
     			BotMessageQueue.addRegularMessage(BotMessageQueue.MessageType.UNSKIPFAIL, name);
     		}
     	}
-    	else if (command.equals("!upnext")) {
-    		BotMessageQueue.addRegularMessage(BotMessageQueue.MessageType.UPNEXT, "");
+    	else if (command.equals("!status")) {
+    		BotMessageQueue.addRegularMessage(BotMessageQueue.MessageType.STATUS, name);
     	}
     	else if (command.equals("!list")) {
-    		//BotMessageQueue.addRegularMessage(BotMessageQueue.MessageType.LISTEMP, "");
     		if (ListOptionsFrame.getListActive()) {
     			String url = "https://docs.google.com/spreadsheets/d/" + ListOptionsFrame.getSpreadsheetId();
     			BotMessageQueue.addPriorityMessage("Here's the list: " + url);
@@ -151,17 +153,7 @@ public class MyListener extends ListenerAdapter {
 		if (MHStreamAssistant.loginSuccess == false) {
 			MHStreamAssistant.connectionSuccess();
 		}
-		
-		//BotMessageQueue.messageOutput = thing.send();
-		//BotMessageQueue.priorityMessageTimer.start();
-		//BotMessageQueue.regularMessageTimer.start();
 	}
-	/*
-	public void onConnectAttemptFailed(ConnectAttemptFailedEvent event) {
-		System.out.println("Connection failed!");
-		
-		
-	}*/
 	
 	public void onNotice(NoticeEvent event) {
 		String notice = event.getNotice();
@@ -173,6 +165,14 @@ public class MyListener extends ListenerAdapter {
 	
 	public static OutputChannel getOutput() {
 		return output;
+	}
+	
+	public static void setHireCommand(String command) {
+		hireCommand = command;
+	}
+	
+	public static String getHireCommand() {
+		return hireCommand;
 	}
 	
 }
