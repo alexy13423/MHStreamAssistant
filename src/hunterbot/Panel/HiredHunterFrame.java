@@ -20,6 +20,7 @@
 package hunterbot.Panel;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -50,8 +51,9 @@ public class HiredHunterFrame {
 	private ListOptionsFrame loFrame;
 	
 	public HiredHunterFrame(Point p) {
-		frame = new JFrame("Hired Hunters");
-		frame.setSize(500, 850);
+		frame = new JFrame("Picked Viewers");
+		frame.setSize(550, 850);
+		frame.setMinimumSize(new Dimension(550, 850));
 		frame.setLocation(p);
 		frame.setVisible(false);
 		frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
@@ -61,31 +63,26 @@ public class HiredHunterFrame {
 			
 			@Override
 			public void windowOpened(WindowEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
 			public void windowIconified(WindowEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
 			public void windowDeiconified(WindowEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
 			public void windowDeactivated(WindowEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
 			public void windowClosing(WindowEvent e) {
-				// TODO Auto-generated method stub
 				Object[] options = {"Yes", "No"};
 				int n = JOptionPane.showOptionDialog(frame, "Are you sure you want to close Monster Hunter Stream Assistant?",
 						"Close Confirmation",
@@ -105,18 +102,19 @@ public class HiredHunterFrame {
 					if (!saveSuccess)
 						return;
 				}
+				if (ListOptionsFrame.getListActive()) {
+					ListOptionsFrame.clearList();
+				}
 				System.exit(0);
 			}
 			
 			@Override
 			public void windowClosed(WindowEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
 			public void windowActivated(WindowEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 		});
@@ -134,7 +132,7 @@ public class HiredHunterFrame {
 		plFrame = new PriorityListFrame();
 		loFrame = new ListOptionsFrame();
 		
-		JButton htButton = new JButton("Hunter Table");
+		JButton htButton = new JButton("Viewer Table");
 		htButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -161,7 +159,7 @@ public class HiredHunterFrame {
 			}
 		});
 		
-		JButton loButton = new JButton("List Options");
+		JButton loButton = new JButton("Google Sheet Link");
 		loButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

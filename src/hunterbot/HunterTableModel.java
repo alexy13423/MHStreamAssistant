@@ -353,6 +353,11 @@ public class HunterTableModel extends AbstractTableModel {
 		return returnValue;
 	}
 	
+	public Object[] clearList() {
+		hunterList.clear();
+		return getSpreadsheetOutput();
+	}
+	
 	public void setMaxEntries(int entries) {
 		maxEntries = entries;
 	}

@@ -56,7 +56,7 @@ public class HunterTableFrame {
 	private static Vector<String> playedViewers;
 	
 	public HunterTableFrame() {
-		frame = new JFrame("Hunter List");
+		frame = new JFrame("Viewer List");
 		frame.setSize(800, 800);
 		frame.setVisible(false);
 		frame.setBackground(Color.CYAN);
@@ -68,8 +68,6 @@ public class HunterTableFrame {
 		hunterTable = new JTable(hunterTableModel);
 		hunterScroll.setViewportView(hunterTable);
 		frame.add(hunterScroll);
-		
-		//hunterTable.setAutoCreateRowSorter(true);
 		
 		TableRowSorter<HunterTableModel> sorter = new TableRowSorter<HunterTableModel>(hunterTableModel);
 		List<RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
@@ -127,7 +125,7 @@ public class HunterTableFrame {
 		hunterControls.setLayout(new BorderLayout(15, 15));
 		
 		JPanel topRowControls = new JPanel();
-		JButton hireNextButton = new JButton("Hire Next");
+		JButton hireNextButton = new JButton("Pick Next");
 		hireNextButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -135,7 +133,7 @@ public class HunterTableFrame {
 				hireHunter(1);
 			}
 		});
-		JButton hireSelectedButton = new JButton("Hire Selected");
+		JButton hireSelectedButton = new JButton("Pick Selected");
 		hireSelectedButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -143,7 +141,7 @@ public class HunterTableFrame {
 				hireHunter(0);
 			}
 		});
-		JButton addHunterButton = new JButton("Add New Hunter");
+		JButton addHunterButton = new JButton("Add New Viewer");
 		addHunterButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -176,7 +174,7 @@ public class HunterTableFrame {
 		hunterControls.add(topRowControls,BorderLayout.PAGE_START);
 		
 		JPanel middleRowControls = new JPanel();
-		JButton hireBreakButton = new JButton("Hire HR Break");
+		JButton hireBreakButton = new JButton("Pick HR Break");
 		hireBreakButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -184,7 +182,7 @@ public class HunterTableFrame {
 				hireHunter(2);
 			}
 		});
-		JButton hireHRButton = new JButton("Hire HR");
+		JButton hireHRButton = new JButton("Pick HR");
 		hireHRButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -192,7 +190,7 @@ public class HunterTableFrame {
 				hireHunter(3);
 			}
 		});
-		JButton hireLRButton = new JButton("Hire LR");
+		JButton hireLRButton = new JButton("Pick LR");
 		hireLRButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -223,7 +221,7 @@ public class HunterTableFrame {
 				toggleStatus(1);
 			}
 		});
-		JButton cleanListButton = new JButton("Clean List");
+		JButton cleanListButton = new JButton("Clear Played Viewers");
 		cleanListButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -420,6 +418,10 @@ public class HunterTableFrame {
 	
 	public static Object[] getSpreadsheetOutput() {
 		return hunterTableModel.getSpreadsheetOutput();
+	}
+	
+	public static Object[] getClearOutput() {
+		return hunterTableModel.clearList();
 	}
 	
 	public static int getMaxEntries() {

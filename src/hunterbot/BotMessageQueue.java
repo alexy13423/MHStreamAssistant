@@ -218,7 +218,7 @@ public class BotMessageQueue implements Runnable{
 	public static void addRegularMessage(MessageType msg, String name) {
 		int currentMessagePriority = 0;
 		int messageOrdinal = msg.ordinal();
-		System.out.println("Message ordinal: " + messageOrdinal);
+		//System.out.println("Message ordinal: " + messageOrdinal);
 		for (int i = 0; i < regularMessageOrder.length; i++) {
 			if (i == messageOrdinal)
 				continue;
@@ -227,8 +227,8 @@ public class BotMessageQueue implements Runnable{
 				currentMessagePriority = thisMessagePriority + 1;
 			}
 		}
-		System.out.println("Old message priority: " + regularMessageOrder[messageOrdinal]);
-		System.out.println("New message priority: " + currentMessagePriority);
+		//System.out.println("Old message priority: " + regularMessageOrder[messageOrdinal]);
+		//System.out.println("New message priority: " + currentMessagePriority);
 		if (regularMessageOrder[messageOrdinal] < currentMessagePriority) {
 			regularMessageOrder[messageOrdinal] = currentMessagePriority;
 		}
@@ -249,7 +249,7 @@ public class BotMessageQueue implements Runnable{
 			int messageOrdinal = msg.ordinal();
 			synchronized(userMessageArray) {
 				Vector<String> names = userMessageArray.get(messageOrdinal);
-				System.out.println("Size of names: " + names.size());
+				//System.out.println("Size of names: " + names.size());
 				for (int i = names.size() - 1; i >= 0; i--) {
 					userNameString += names.remove(i);
 					if (i != 0) {
@@ -258,7 +258,7 @@ public class BotMessageQueue implements Runnable{
 				}
 				userNameString += ": ";
 				messageOutput.message(userNameString + msg.getMessage());
-				System.out.println("New size of names: " + names.size());
+				//System.out.println("New size of names: " + names.size());
 				userMessageArray.set(messageOrdinal, names);
 			}
 		}
@@ -278,24 +278,6 @@ public class BotMessageQueue implements Runnable{
 		else {
 			messageOutput.message(name + ": You aren't currently in the queue!");
 		}
-		
-		/*
-		Vector<Hunter> hunters = model.getNextThreeHunters();
-		int numHunters = hunters.size();
-		switch (numHunters) {
-		case 0:
-			messageOutput.message("There are no hunters for the next rotation currently. Why not sign up now?");
-			break;
-		case 1:
-			messageOutput.message("The only hunter currently up to hunt next is " + hunters.get(0).getTwitchName() + ".");
-			break;
-		case 2:
-			messageOutput.message("The next two hunters up to hunt are " + hunters.get(0).getTwitchName() + " and " + hunters.get(1).getTwitchName() + ".");
-			break;
-		case 3:
-			messageOutput.message("The next three hunters up to hunt are " + hunters.get(0).getTwitchName() + ", " + hunters.get(1).getTwitchName() + ", and " + hunters.get(2).getTwitchName() + ".");
-			break;
-		}*/
 	}
 	
 	public static void doUBW() {

@@ -47,7 +47,6 @@ import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.*;
 import com.google.api.services.sheets.v4.Sheets;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -84,7 +83,7 @@ public class ListOptionsFrame {
     }
 	
 	private JFrame frame;
-	private Sheets service;
+	private static Sheets service;
 	private static String spreadsheetId;
 	
 	private Timer listWriteTimer;
@@ -94,7 +93,7 @@ public class ListOptionsFrame {
 	private static boolean listActive;
 	
 	public ListOptionsFrame() {
-		frame = new JFrame("List Options");
+		frame = new JFrame("Google Sheet Link");
 		frame.setSize(400, 200);
 		frame.setVisible(false);
 		frame.setResizable(false);
@@ -166,7 +165,6 @@ public class ListOptionsFrame {
 				}
 				JOptionPane.showMessageDialog(frame, "Load success!", "Sheet Loaded", JOptionPane.INFORMATION_MESSAGE);
 				spreadsheetId = id;
-				System.out.println("Id: " + spreadsheetId);
 				listWriteTimer.start();
 				listActive = true;
 			}
@@ -184,36 +182,42 @@ public class ListOptionsFrame {
 	}
 	
 	public void writeTableToList() {
-		//ValueRange values = HunterTableFrame.getSpreadsheetOutput();
 		Object[] obj = HunterTableFrame.getSpreadsheetOutput();
 		ValueRange values = (ValueRange) obj[0];
 		@SuppressWarnings("unchecked")
 		List<Request> reqs = (List<Request>) obj[1];
-		//System.out.println("Values: " + values.toString());
 		try {
 			service.spreadsheets().values().update(spreadsheetId, "A1", values).setValueInputOption("USER_ENTERED").execute();
-			//BatchUpdateValuesRequest req = new BatchUpdateValuesRequest();
 			BatchUpdateSpreadsheetRequest req = new BatchUpdateSpreadsheetRequest();
 			req.setRequests(reqs);
 			service.spreadsheets().batchUpdate(spreadsheetId, req).execute();
-			//RepeatCellRequest req = new RepeatCellRequest();
-			//Request newReq = new Request();
-			//newReq.setRepeatCell(req);
-			//System.out.println(newReq.toPrettyString());
-			
-			//service.spreadsheets().batchUpdate(spreadsheetId, content);
 		} catch (IOException io) {
 			io.printStackTrace();
 		}
 		
 		long expirationTime = credential.getExpiresInSeconds();
-		System.out.println("Expiration time: " + expirationTime);
 		if (expirationTime < 300) {
 			try {
-				service = getSheetsService();
+				credential.refreshToken();
 			} catch (IOException io) {
 				io.printStackTrace();
 			}
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static void clearList() {
+		Object[] clearStuff = HunterTableFrame.getClearOutput();
+		ValueRange clearValues = (ValueRange) clearStuff[0];
+		List<Request> clearReqs = (List<Request>) clearStuff[1];
+		
+		try {
+			service.spreadsheets().values().update(spreadsheetId, "A1", clearValues).setValueInputOption("USER_ENTERED").execute();
+			BatchUpdateSpreadsheetRequest request = new BatchUpdateSpreadsheetRequest();
+			request.setRequests(clearReqs);
+			service.spreadsheets().batchUpdate(spreadsheetId, request).execute();
+		} catch (IOException io) {
+			io.printStackTrace();
 		}
 	}
 	
@@ -224,8 +228,7 @@ public class ListOptionsFrame {
      */
     public static Credential authorize() throws IOException {
         // Load client secrets.
-        InputStream in = new FileInputStream("client_secret.json");
-            //SheetsQuickstart.class.getResourceAsStream("/client_secret.json");
+    	InputStream in = ListOptionsFrame.class.getResourceAsStream("/client_secret.json");
         GoogleClientSecrets clientSecrets =
             GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 

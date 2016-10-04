@@ -44,7 +44,7 @@ public class ChatBotThread extends Thread {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("doop");
+		//System.out.println("doop");
 		return;
 	}
 	
@@ -59,7 +59,7 @@ public class ChatBotThread extends Thread {
 	public void stopBot() {
 		bot.closeBot();
 		running = false;
-		System.out.println("deep");
+		//System.out.println("deep");
 	}
 
 }
