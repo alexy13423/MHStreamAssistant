@@ -184,12 +184,24 @@ public class ListOptionsFrame {
 	}
 	
 	public void writeTableToList() {
-		ValueRange values = HunterTableFrame.getSpreadsheetOutput();
+		//ValueRange values = HunterTableFrame.getSpreadsheetOutput();
+		Object[] obj = HunterTableFrame.getSpreadsheetOutput();
+		ValueRange values = (ValueRange) obj[0];
+		@SuppressWarnings("unchecked")
+		List<Request> reqs = (List<Request>) obj[1];
 		//System.out.println("Values: " + values.toString());
 		try {
-			//service.spreadsheets().values().update(spreadsheetId, "B2", values).setValueInputOption("USER_ENTERED").execute();
-			BatchUpdateValuesRequest req = new BatchUpdateValuesRequest();
-			service.spreadsheets().values().batchUpdate(spreadsheetId, content);
+			service.spreadsheets().values().update(spreadsheetId, "A1", values).setValueInputOption("USER_ENTERED").execute();
+			//BatchUpdateValuesRequest req = new BatchUpdateValuesRequest();
+			BatchUpdateSpreadsheetRequest req = new BatchUpdateSpreadsheetRequest();
+			req.setRequests(reqs);
+			service.spreadsheets().batchUpdate(spreadsheetId, req).execute();
+			//RepeatCellRequest req = new RepeatCellRequest();
+			//Request newReq = new Request();
+			//newReq.setRepeatCell(req);
+			//System.out.println(newReq.toPrettyString());
+			
+			//service.spreadsheets().batchUpdate(spreadsheetId, content);
 		} catch (IOException io) {
 			io.printStackTrace();
 		}

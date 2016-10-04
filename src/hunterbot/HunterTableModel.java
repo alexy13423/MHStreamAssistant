@@ -25,6 +25,13 @@ import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
+import com.google.api.services.sheets.v4.model.CellData;
+import com.google.api.services.sheets.v4.model.CellFormat;
+import com.google.api.services.sheets.v4.model.Color;
+import com.google.api.services.sheets.v4.model.GridRange;
+import com.google.api.services.sheets.v4.model.RepeatCellRequest;
+import com.google.api.services.sheets.v4.model.Request;
+import com.google.api.services.sheets.v4.model.TextFormat;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
 public class HunterTableModel extends AbstractTableModel {
@@ -50,6 +57,7 @@ public class HunterTableModel extends AbstractTableModel {
 				if (newPriority > thisPriority) {
 					added = true;
 					hunterList.add(i, newHunter);
+					maxEntries++;
 					break;
 				}
 			}
@@ -209,17 +217,49 @@ public class HunterTableModel extends AbstractTableModel {
 		return false;
 	}
 	
-	public ValueRange getSpreadsheetOutput() {
-		ValueRange object = new ValueRange();
+	public Object[] getSpreadsheetOutput() {
+		ValueRange tableData = new ValueRange();
 		
 		List<List<Object>> values = new ArrayList<List<Object>>();
+		List<Request> reqs = new ArrayList<Request>();
 		
-		for (int i = 0; i < maxEntries; i++) {
+		for (int i = -1; i < maxEntries; i++) {
 			List<Object> row = new ArrayList<Object>();
-			if (i < hunterList.size()) {
+			Request rowFormatRequest = new Request();
+			RepeatCellRequest rowFormatRepeatRequest = new RepeatCellRequest();
+			GridRange rowRange = new GridRange();
+			rowRange.setSheetId(0);
+			rowRange.setStartRowIndex(i + 1);
+			rowRange.setEndRowIndex(i + 2);
+			rowRange.setStartColumnIndex(0);
+			rowRange.setEndColumnIndex(6);
+			rowFormatRepeatRequest.setRange(rowRange);
+			CellData rowData = new CellData();
+			CellFormat rowFormat = new CellFormat();
+			Color rowBackgroundColor = new Color();
+			TextFormat rowTextFormat = new TextFormat();
+			Color rowForegroundColor = new Color();
+			rowTextFormat.setFontSize(10);
+			if (i == -1) {
+				row.add("Queue #");
+				row.add("Viewer Status");
+				row.add("Twitch Name");
+				row.add("Hunter Name");
+				row.add("Hunter Rank");
+				row.add("Rank Category");
+				rowBackgroundColor.setRed((float) 1);
+				rowBackgroundColor.setGreen((float) 1);
+				rowBackgroundColor.setBlue((float) 1);
+				rowTextFormat.setBold(true);
+				rowForegroundColor.setRed((float) 0);
+				rowForegroundColor.setGreen((float) 0);
+				rowForegroundColor.setBlue((float) 0);
+			}
+			else if (i < hunterList.size()) {
 				Hunter hunter = hunterList.get(i);
+				Hunter.State state = hunter.getState();
 				row.add(hunter.getPriority().toString());
-				row.add(hunter.getState().toString());
+				row.add(state.toString());
 				row.add(hunter.getTwitchName());
 				row.add(hunter.getHunterName());
 				int rank = hunter.getHunterRank();
@@ -231,15 +271,86 @@ public class HunterTableModel extends AbstractTableModel {
 				} else {
 					row.add("HR Break");
 				}
+				rowTextFormat.setBold(false);
+				switch(state) {
+				case PRIORITYWAITING:
+					rowBackgroundColor.setRed((float) 0);
+					rowBackgroundColor.setGreen((float) 1);
+					rowBackgroundColor.setBlue((float) 1);
+					rowForegroundColor.setRed((float) 0);
+					rowForegroundColor.setGreen((float) 0);
+					rowForegroundColor.setBlue((float) 0);
+					break;
+				case WAITING:
+					rowBackgroundColor.setRed((float) 1);
+					rowBackgroundColor.setGreen((float) 1);
+					rowBackgroundColor.setBlue((float) 1);
+					rowForegroundColor.setRed((float) 0);
+					rowForegroundColor.setGreen((float) 0);
+					rowForegroundColor.setBlue((float) 0);
+					break;
+				case PLAYING:
+					rowBackgroundColor.setRed((float) 1);
+					rowBackgroundColor.setGreen((float) 1);
+					rowBackgroundColor.setBlue((float) 0);
+					rowForegroundColor.setRed((float) 0);
+					rowForegroundColor.setGreen((float) 0);
+					rowForegroundColor.setBlue((float) 0);
+					break;
+				case PLAYED:
+					rowBackgroundColor.setRed((float) 0);
+					rowBackgroundColor.setGreen((float) 1);
+					rowBackgroundColor.setBlue((float) 0);
+					rowForegroundColor.setRed((float) 0);
+					rowForegroundColor.setGreen((float) 0);
+					rowForegroundColor.setBlue((float) 0);
+					break;
+				case BAILED:
+					rowBackgroundColor.setRed((float) 0);
+					rowBackgroundColor.setGreen((float) 0);
+					rowBackgroundColor.setBlue((float) 0);
+					rowForegroundColor.setRed((float) 1);
+					rowForegroundColor.setGreen((float) 0);
+					rowForegroundColor.setBlue((float) 0);
+					break;
+				case SKIPPED:
+					rowBackgroundColor.setRed((float) 1);
+					rowBackgroundColor.setGreen((float) .647);
+					rowBackgroundColor.setBlue((float) 0);
+					rowForegroundColor.setRed((float) 0);
+					rowForegroundColor.setGreen((float) 0);
+					rowForegroundColor.setBlue((float) 0);
+					break;
+				}
+				
 			} else {
 				for (int j = 0; j < 6; j++) {
 					row.add("");
 				}
+				rowBackgroundColor.setRed((float) 1);
+				rowBackgroundColor.setGreen((float) 1);
+				rowBackgroundColor.setBlue((float) 1);
+				rowForegroundColor.setRed((float) 0);
+				rowForegroundColor.setGreen((float) 0);
+				rowForegroundColor.setBlue((float) 0);
+				rowTextFormat.setBold(false);
 			}
 			values.add(row);
+			rowFormat.setBackgroundColor(rowBackgroundColor);
+			rowFormat.setHorizontalAlignment("CENTER");
+			rowTextFormat.setForegroundColor(rowForegroundColor);
+			rowFormat.setTextFormat(rowTextFormat);
+			rowData.setUserEnteredFormat(rowFormat);
+			rowFormatRepeatRequest.setCell(rowData);
+			rowFormatRepeatRequest.setFields("userEnteredFormat(backgroundColor,textFormat,horizontalAlignment)");
+			rowFormatRequest.setRepeatCell(rowFormatRepeatRequest);
+			reqs.add(rowFormatRequest);
 		}
-		object.setValues(values);
-		return object;
+		tableData.setValues(values);
+		Object[] returnValue = new Object[2];
+		returnValue[0] = tableData;
+		returnValue[1] = reqs;
+		return returnValue;
 	}
 	
 	public void setMaxEntries(int entries) {

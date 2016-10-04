@@ -43,8 +43,6 @@ import javax.swing.table.TableRowSorter;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 
-import com.google.api.services.sheets.v4.model.ValueRange;
-
 import hunterbot.BotMessageQueue;
 import hunterbot.Hunter;
 import hunterbot.HunterTableModel;
@@ -257,7 +255,7 @@ public class HunterTableFrame {
 		Hunter hunter = null;
 		int selectedRow = -1;
 		if (hireType == 0) {
-			selectedRow = hunterTable.getSelectedRow();
+			selectedRow = hunterTable.convertRowIndexToModel(hunterTable.getSelectedRow());
 			if (selectedRow != -1) {
 				hunter = hunterTableModel.getHunter(selectedRow);
 				System.out.println("Hunter: " + hunter);
@@ -317,7 +315,7 @@ public class HunterTableFrame {
 	}
 	
 	private boolean toggleStatus(int status) {
-		int selectedRow = hunterTable.getSelectedRow();
+		int selectedRow = hunterTable.convertRowIndexToModel(hunterTable.getSelectedRow());
 		if (selectedRow != -1) {
 			Hunter hunter = hunterTableModel.getHunter(selectedRow);
 			Hunter.State state = hunter.getState();
@@ -420,7 +418,7 @@ public class HunterTableFrame {
 		playedViewers.add(name);
 	}
 	
-	public static ValueRange getSpreadsheetOutput() {
+	public static Object[] getSpreadsheetOutput() {
 		return hunterTableModel.getSpreadsheetOutput();
 	}
 	
