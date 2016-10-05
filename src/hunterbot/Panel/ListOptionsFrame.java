@@ -27,6 +27,7 @@ import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
@@ -45,11 +46,18 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.*;
+
+import hunterbot.SpreadsheetConfig;
+
 import com.google.api.services.sheets.v4.Sheets;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -122,7 +130,18 @@ public class ListOptionsFrame {
 		listPanel.add(new JSeparator(JSeparator.HORIZONTAL));
 		
 		JPanel sheetPanel = new JPanel();
+		JLabel sheetLabel = new JLabel("Spreadsheet ID");
+		sheetPanel.add(sheetLabel);
 		JTextField sheetID = new JTextField();
+		
+		SpreadsheetConfig config = null;
+		try (FileInputStream fileIn = new FileInputStream("spreadsheet.ser"); ObjectInputStream configIn = new ObjectInputStream(fileIn)) {
+			config = (SpreadsheetConfig) configIn.readObject();
+			String id = config.getStoredId();
+			sheetID.setText(id);
+		} catch (IOException | ClassNotFoundException e) {
+		}
+		
 		sheetID.setPreferredSize(new Dimension(280, 30));
 		sheetID.setEnabled(false);
 		sheetID.setEditable(false);
@@ -167,6 +186,11 @@ public class ListOptionsFrame {
 				spreadsheetId = id;
 				listWriteTimer.start();
 				listActive = true;
+				SpreadsheetConfig newConfig = new SpreadsheetConfig(spreadsheetId);
+				try (FileOutputStream fileOut = new FileOutputStream("spreadsheet.ser"); ObjectOutputStream configOut = new ObjectOutputStream(fileOut)) {
+					configOut.writeObject(newConfig);
+				} catch (IOException e1) {
+				}
 			}
 		});
 		

@@ -21,26 +21,20 @@ package hunterbot;
 
 import java.io.Serializable;
 
-public class OptionsConfig implements Serializable {
+public class SpreadsheetConfig implements Serializable {
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private String hireCommand;
-	private boolean allowRepeatViewers;
+	private String spreadsheetId;
 	
-	public OptionsConfig(String command, boolean allow) {
-		hireCommand = command;
-		allowRepeatViewers = allow;
+	public SpreadsheetConfig(String id) {
+		spreadsheetId = id;
 	}
 	
-	public String getHireCommand() {
-		return hireCommand;
+	public String getStoredId() {
+		return spreadsheetId;
 	}
-	
-	public boolean getAllowRepeat() {
-		return allowRepeatViewers;
-	}
-	
 }
