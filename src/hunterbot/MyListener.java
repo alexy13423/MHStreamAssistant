@@ -147,7 +147,7 @@ public class MyListener extends ListenerAdapter {
 	}
 	
 	public void onJoin(JoinEvent event) {
-		System.out.println("Join success!");
+		//System.out.println("Join success!");
 		Channel thing = event.getChannel();
 		output = thing.send();
 		if (MHStreamAssistant.loginSuccess == false) {

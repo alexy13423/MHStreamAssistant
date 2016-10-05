@@ -168,7 +168,7 @@ public class MHStreamAssistant {
 	public static void connectionFail() {
 		botThread.stopBot();
 		JOptionPane.showMessageDialog(frame, "Unable to connect to Twitch IRC.", "Bot Connection Error", JOptionPane.ERROR_MESSAGE);
-		System.out.println("Bot stopped!");
+		//System.out.println("Bot stopped!");
 	}
 	
 	public static boolean isInteger(String s, int radix) {
