@@ -52,7 +52,6 @@ public class MyListener extends ListenerAdapter {
 	    	if (OptionsFrame.getSignupsActive()) {
 	    		StringTokenizer token = new StringTokenizer(message);
 	    		if (token.countTokens() == 1) {
-	    			System.out.println("poop");
 	    			BotMessageQueue.addRegularMessage(BotMessageQueue.MessageType.QUEUEDIRECTIONS, "");
 	    			return;
 	    		}
@@ -137,12 +136,9 @@ public class MyListener extends ListenerAdapter {
     		} else {
     			BotMessageQueue.addPriorityMessage("There is no list currently linked!");
     		}
-    		
     	}
-    	else if (command.equals("!ubw")) {
-    		if (name.equals("cmdrrose")) {
-    			BotMessageQueue.doUBW();
-    		}
+    	else if (command.equals("!queuecommands")) {
+    		BotMessageQueue.addPriorityMessage("The commands for MHStreamAssistant are: !" + hireCommand + ", !skip, !unskip, !list, and !status.");
     	}
 	}
 	

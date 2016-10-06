@@ -91,7 +91,7 @@ public class OptionsFrame {
 				else {
 					signupsActive = true;
 					toggleBotButton.setText("Disable Signups");
-					BotMessageQueue.addPriorityMessage("Signups are now open! Use !" + MyListener.getHireCommand() + " to join!");
+					BotMessageQueue.addPriorityMessage("Signups are now open! Use !" + MyListener.getHireCommand() + " to join! Other commands can be found using !queuecommands.");
 				}
 			}
 		});

@@ -279,33 +279,5 @@ public class BotMessageQueue implements Runnable{
 			messageOutput.message(name + ": You aren't currently in the queue!");
 		}
 	}
-	
-	public static void doUBW() {
-		switch(ubwCount) {
-		case 0:
-			messageOutput.message("I am the shaft of my arrow.");
-			break;
-		case 1:
-			messageOutput.message("Bow is my weapon and aerial is my style.");
-			break;
-		case 2:
-			messageOutput.message("I have fired over a thousand shots.");
-			break;
-		case 3:
-			messageOutput.message("Unknown to village, nor known to guild.");
-			break;
-		case 4:
-			messageOutput.message("Have withstood pain to slay many dragons.");
-			break;
-		case 5:
-			messageOutput.message("Yet, those monsters will never drop anything.");
-			break;
-		case 6:
-			messageOutput.message("So as I pray, unlimited bow works.");
-			break;
-		}
-		ubwCount++;
-		ubwCount = ubwCount % 7;
-	}
 
 }
