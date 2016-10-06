@@ -86,8 +86,6 @@ public class BotMessageQueue implements Runnable{
 	private ActionListener priorityMessageOutputFunction, regularMessageOutputFunction;
 	private int priorityDelay, regularDelay;
 	
-	private static int ubwCount;
-	
 	public BotMessageQueue() {
 		messageOutput = MyListener.getOutput();
 		
@@ -200,8 +198,6 @@ public class BotMessageQueue implements Runnable{
 		priorityMessageTimer.setRepeats(true);
 		regularMessageTimer = new Timer(regularDelay, regularMessageOutputFunction);
 		regularMessageTimer.setRepeats(true);
-		
-		ubwCount = 0;
 		
 		priorityMessageTimer.start();
 		regularMessageTimer.start();
