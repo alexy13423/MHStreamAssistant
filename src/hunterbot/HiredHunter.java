@@ -84,15 +84,7 @@ public class HiredHunter implements Serializable {
 		rotateOut.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				if (hasHunter) {
-					Hunter h = clearHunter();
-					HiredHunterFrame.currentHunters--;
-					h.setState(Hunter.State.PLAYED);
-					HunterTableFrame.updateHunter(h);
-					String name = h.getTwitchName();
-					BotMessageQueue.addRegularMessage(BotMessageQueue.MessageType.TURNDONE, name);
-					HunterTableFrame.addPlayedViewer(h.getTwitchName());
-				}
+				rotateOut();
 			}
 		});
 		pickedHunt = new JButton("Toggle Picked");
@@ -108,11 +100,13 @@ public class HiredHunter implements Serializable {
 			public void actionPerformed(ActionEvent e) {
 				if (hasHunter) {
 					Hunter h = clearHunter();
+					hasHunter = false;
 					HiredHunterFrame.currentHunters--;
 					h.setState(Hunter.State.SKIPPED);
 					HunterTableFrame.updateHunter(h);
 					String name = h.getTwitchName();
 					BotMessageQueue.addRegularMessage(BotMessageQueue.MessageType.TURNSKIPPED, name);
+					HiredHunterFrame.writeViewersToFile();
 				}
 			}
 		});
@@ -123,6 +117,7 @@ public class HiredHunter implements Serializable {
 			public void actionPerformed(ActionEvent e) {
 				if (hasHunter) {
 					Hunter h = clearHunter();
+					hasHunter = false;
 					HiredHunterFrame.currentHunters--;
 					PriorityNumber p = h.getPriority();
 					int pLevel = p.getPriorityLevel();
@@ -133,6 +128,7 @@ public class HiredHunter implements Serializable {
 					HunterTableFrame.updateHunter(h);
 					String name = h.getTwitchName();
 					BotMessageQueue.addRegularMessage(BotMessageQueue.MessageType.TURNUNDONE, name);
+					HiredHunterFrame.writeViewersToFile();
 				}
 			}
 		});
@@ -143,11 +139,13 @@ public class HiredHunter implements Serializable {
 			public void actionPerformed(ActionEvent e) {
 				if (hasHunter) {
 					Hunter h = clearHunter();
+					hasHunter = false;
 					HiredHunterFrame.currentHunters--;
 					h.setState(Hunter.State.BAILED);
 					HunterTableFrame.updateHunter(h);
 					String name = h.getTwitchName();
 					BotMessageQueue.addRegularMessage(BotMessageQueue.MessageType.TURNBAILED, name);
+					HiredHunterFrame.writeViewersToFile();
 				}
 			}
 		});
@@ -225,9 +223,23 @@ public class HiredHunter implements Serializable {
 		return myHunter;
 	}
 	
-	private void incrementHunts() {
+	public void incrementHunts() {
 		myHunter.incrementHunts();
 		huntCountField.setText(Integer.toString(myHunter.getHunts()));
+	}
+	
+	public void rotateOut() {
+		if (hasHunter) {
+			Hunter h = clearHunter();
+			hasHunter = false;
+			HiredHunterFrame.currentHunters--;
+			h.setState(Hunter.State.PLAYED);
+			HunterTableFrame.updateHunter(h);
+			String name = h.getTwitchName();
+			BotMessageQueue.addRegularMessage(BotMessageQueue.MessageType.TURNDONE, name);
+			HunterTableFrame.addPlayedViewer(h.getTwitchName());
+			HiredHunterFrame.writeViewersToFile();
+		}
 	}
 	
 	private void toggleHuntPicked() {

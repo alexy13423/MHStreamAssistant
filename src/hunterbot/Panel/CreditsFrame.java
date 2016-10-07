@@ -39,7 +39,7 @@ public class CreditsFrame {
 		JPanel creditsPanel = new JPanel();
 		creditsPanel.setLayout(new BoxLayout(creditsPanel, BoxLayout.Y_AXIS));
 		JTextArea authorText = new JTextArea();
-		authorText.setText("Monster Hunter Stream Assistant (MHStreamAssistant) ver 3 \n"
+		authorText.setText("Monster Hunter Stream Assistant (MHStreamAssistant) ver 3.02 \n"
 				+ "Copyright © 2016 Alexander Le (alexyle@gmail.com) \n"
 				+ "\n"
 				+ "Special thanks to the Twitch streamers: \n"

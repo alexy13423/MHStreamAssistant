@@ -26,6 +26,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.Vector;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -52,8 +56,8 @@ public class HiredHunterFrame {
 	
 	public HiredHunterFrame(Point p) {
 		frame = new JFrame("Picked Viewers");
-		frame.setSize(550, 850);
-		frame.setMinimumSize(new Dimension(550, 850));
+		frame.setSize(550, 900);
+		frame.setMinimumSize(new Dimension(550, 900));
 		frame.setLocation(p);
 		frame.setVisible(false);
 		frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
@@ -188,8 +192,50 @@ public class HiredHunterFrame {
 		frame.add(new JSeparator(JSeparator.HORIZONTAL));
 		
 		frame.add(firstHunter.getPanel(), BorderLayout.PAGE_START);
+		frame.add(new JSeparator(JSeparator.HORIZONTAL));
 		frame.add(secondHunter.getPanel(), BorderLayout.CENTER);
+		frame.add(new JSeparator(JSeparator.HORIZONTAL));
 		frame.add(thirdHunter.getPanel(), BorderLayout.PAGE_END);
+		frame.add(new JSeparator(JSeparator.HORIZONTAL));
+		
+		JPanel multipleControls = new JPanel();
+		JButton incrementAll = new JButton("Increment All Hunts");
+		incrementAll.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (firstHunter.getHasHunter()) {
+					firstHunter.incrementHunts();
+				}
+				if (secondHunter.getHasHunter()) {
+					secondHunter.incrementHunts();
+				}
+				if (thirdHunter.getHasHunter()) {
+					thirdHunter.incrementHunts();
+				}
+			}
+		});
+		JButton rotateAll = new JButton("Rotate Out All");
+		rotateAll.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (firstHunter.getHasHunter()) {
+					firstHunter.rotateOut();
+				}
+				if (secondHunter.getHasHunter()) {
+					secondHunter.rotateOut();
+				}
+				if (thirdHunter.getHasHunter()) {
+					thirdHunter.rotateOut();
+				}
+			}
+		});
+		
+		multipleControls.add(incrementAll);
+		multipleControls.add(rotateAll);
+		frame.add(multipleControls);
+		
 	}
 	
 	public void setVisible(boolean b) {
@@ -212,14 +258,33 @@ public class HiredHunterFrame {
 		else {
 			thirdHunter.setHunter(h);
 		}
+		
+		writeViewersToFile();
 	}
 	
 	public static int getHunterCount() {
 		return currentHunters;
 	}
 	
-	public static void doBackup() {
+	public static void writeViewersToFile() {
+		Vector<String> twitchNames = new Vector<String>();
+		if (firstHunter.getHasHunter()) {
+			twitchNames.add(firstHunter.getHunter().getTwitchName());
+		}
+		if (secondHunter.getHasHunter()) {
+			twitchNames.add(secondHunter.getHunter().getTwitchName());
+		}
+		if (thirdHunter.getHasHunter()) {
+			twitchNames.add(thirdHunter.getHunter().getTwitchName());
+		}
 		
+		try (PrintWriter writer = new PrintWriter("currentplayers.txt", "UTF-8")) {
+			for (int i = 0; i < twitchNames.size(); i++) {
+				writer.write(twitchNames.get(i));
+				writer.write(System.getProperty("line.separator"));
+			}
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+		}
 	}
 	
 }
